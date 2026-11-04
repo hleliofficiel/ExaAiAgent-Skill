@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hleliofficiel/ExaAiAgent-Skill/schemas/assessment.schema.json",
+  "title": "Security Assessment",
+  "description": "Full security assessment envelope produced from an ExaAiAgent run.",
+  "type": "object",
+  "required": ["assessment_id", "target", "findings"],
+  "properties": {
+    "assessment_id": { "type": "string", "minLength": 1 },
+    "date": { "type": "string" },
+    "target": { "type": "string", "minLength": 1 },
+    "targets": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "authorization": { "type": "string" },
+    "assessor": { "type": "string" },
+    "tool": { "type": "string" },
+    "tool_version": { "type": "string" },
+    "output_format": {
+      "type": "string",
+      "enum": ["json", "sarif", "csv", "html", "md"]
+    },
+    "severity_threshold": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low", "info"]
+    },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "vulnerability-report.schema.json#/$defs/finding" }
+    },
+    "summary": { "type": "object" }
+  }
+}

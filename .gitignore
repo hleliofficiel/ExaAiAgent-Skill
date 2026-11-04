@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+exaai_runs/
+reports/
+*.zip
+.env
+.env.*
+.venv/
+venv/
+.DS_Store

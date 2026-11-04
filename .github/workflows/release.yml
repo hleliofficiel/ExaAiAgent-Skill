@@ -1,0 +1,37 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate and test
+        run: |
+          python scripts/validate_skill.py
+          python -m unittest discover -s tests -v
+      - name: Build ZIP
+        run: |
+          python - <<'PY'
+          import zipfile, pathlib
+          root = pathlib.Path(".")
+          version = (root / "VERSION").read_text().strip()
+          out = pathlib.Path(f"ExaAiAgent-Skill-v{version}.zip")
+          with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(root.rglob("*")):
+                  if p.is_file() and "__pycache__" not in p.parts and p.suffix != ".pyc" and p.name != out.name:
+                      z.write(p, p.as_posix())
+          print(out)
+          PY
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ExaAiAgent-Skill-v*.zip
